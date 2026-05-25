@@ -140,7 +140,7 @@ const defaultData = {
       title: "Harvard HSIL Hackathon 2026 Certificate of Participation",
       issuer: "Harvard T.H. Chan School of Public Health",
       date: "Apr 2026",
-      // credentialId: "UC-abc123",
+      credentialId: "UC-abc123",
       credentialUrl: "#",
       image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80",
       category: "Frontend",
