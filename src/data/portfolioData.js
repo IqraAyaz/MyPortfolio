@@ -9,7 +9,7 @@ const defaultData = {
     phone: "+92 335 2226063",
     location: "Lahore, Pakistan",
     whatsapp: "+923352226063",
-    profilePhoto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
+    profilePhoto: "DP.jpeg",
     cvUrl: "#",
     roles: ["Frontend Developer", "React Specialist", "UI/UX Enthusiast"],
   },
