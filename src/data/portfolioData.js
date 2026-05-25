@@ -14,10 +14,10 @@ const defaultData = {
     roles: ["Frontend Developer", "React Specialist", "UI/UX Enthusiast"],
   },
   social: {
-    github: "https://github.com",
-    linkedin: "https://linkedin.com",
-    twitter: "https://twitter.com",
-    whatsapp: "https://wa.me/923000000000",
+    github: "https://github.com/IqraAyaz",
+    linkedin: "linkedin.com/in/iqra-ayyaz",
+    // twitter: "https://twitter.com",
+    whatsapp: "https://wa.me/923352226063",
   },
   sectionVisibility: {
     about: true,
