@@ -1,7 +1,7 @@
 const defaultData = {
   personal: {
     name: "Iqra Ayyaz",
-    firstName: "Iqra",
+    firstName: "Iqra",https://github.com/IqraAyaz/MyPortfolio/edit/main/src/data/portfolioData.js
     lastName: "Ayyaz",
     tagline: "Crafting beautiful, functional web experiences.",
     bio: "I am a passionate frontend developer with experience in building responsive and user-friendly websites using modern technologies. I craft performant, accessible, and visually stunning web experiences from concept to deployment.",
@@ -91,12 +91,12 @@ const defaultData = {
     },
     {
       id: 3,
-      title: "Shopify Store Theme",
+      title: "Jewelry E-Commerce Store",
       description: "A custom Shopify theme with optimized conversion flows, mobile-first design, and custom section blocks.",
       image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&q=80",
       tags: ["Shopify", "Liquid"],
       category: "Shopify",
-      liveUrl: "#",
+      liveUrl: "https://maisondor-store.myshopify.com/",
       githubUrl: "#",
       techStack: ["Shopify", "Liquid", "CSS", "JavaScript"],
     },
@@ -137,10 +137,10 @@ const defaultData = {
   certificates: [
     {
       id: 1,
-      title: "React – The Complete Guide",
-      issuer: "Udemy",
-      date: "Oct 2023",
-      credentialId: "UC-abc123",
+      title: "Harvard HSIL Hackathon 2026 Certificate of Participation",
+      issuer: "Harvard T.H. Chan School of Public Health",
+      date: "Apr 2026",
+      // credentialId: "UC-abc123",
       credentialUrl: "#",
       image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80",
       category: "Frontend",
@@ -164,16 +164,6 @@ const defaultData = {
       credentialUrl: "#",
       image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80",
       category: "Cloud",
-    },
-    {
-      id: 4,
-      title: "Google UX Design",
-      issuer: "Google / Coursera",
-      date: "Mar 2023",
-      credentialId: "GUX-ghi012",
-      credentialUrl: "#",
-      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&q=80",
-      category: "Design",
     },
   ],
   testimonials: [
