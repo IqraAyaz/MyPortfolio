@@ -1,7 +1,7 @@
 const defaultData = {
   personal: {
     name: "Iqra Ayyaz",
-    firstName: "Iqra",https://github.com/IqraAyaz/MyPortfolio/edit/main/src/data/portfolioData.js
+    firstName: "Iqra",
     lastName: "Ayyaz",
     tagline: "Crafting beautiful, functional web experiences.",
     bio: "I am a passionate frontend developer with experience in building responsive and user-friendly websites using modern technologies. I craft performant, accessible, and visually stunning web experiences from concept to deployment.",
