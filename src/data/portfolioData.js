@@ -244,19 +244,6 @@ const defaultData = {
 };
 
 export const getPortfolioData = () => {
-  try {
-    const saved = localStorage.getItem("portfolioData");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      return {
-        ...defaultData,
-        ...parsed,
-        personal: { ...defaultData.personal, ...parsed.personal },
-        social: { ...defaultData.social, ...parsed.social },
-        sectionVisibility: { ...defaultData.sectionVisibility, ...parsed.sectionVisibility },
-      };
-    }
-  } catch (e) {}
   return defaultData;
 };
 
