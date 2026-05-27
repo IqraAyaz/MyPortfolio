@@ -197,7 +197,7 @@ const Projects = ({ data }) => {
             id: `gh-${repo.id}`,
             title: repo.name.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
             description: repo.description || "No description provided.",
-            image: `https://gh-card.dev/repos/${githubUsername}/${repo.name}.png`,
+image: `https://opengraph.githubassets.com/v1/${githubUsername}/${repo.name}`,
             tags: repo.topics?.slice(0, 3) || ["Open Source"],
             category: "GitHub",
             liveUrl: repo.homepage || "#",
