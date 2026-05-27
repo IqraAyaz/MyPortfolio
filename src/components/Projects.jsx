@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Icon from "./Icons";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80";
+
 const SkeletonCard = () => (
   <div style={{
     border: "var(--border)", borderRadius: "var(--radius)",
@@ -54,7 +56,12 @@ const ProjectModal = ({ project, onClose }) => {
         }}
       >
         <div style={{ position: "relative" }}>
-          <img src={project.image} alt={project.title} style={{ width: "100%", height: "300px", objectFit: "cover", display: "block" }} />
+          <img
+            src={project.image}
+            alt={project.title}
+            onError={e => { e.target.src = FALLBACK_IMAGE; }}
+            style={{ width: "100%", height: "300px", objectFit: "cover", display: "block" }}
+          />
           <button
             onClick={onClose}
             style={{
@@ -76,15 +83,18 @@ const ProjectModal = ({ project, onClose }) => {
           <div style={{ marginBottom: "28px" }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "2px", color: "var(--accent)", textTransform: "uppercase", marginBottom: "12px" }}>Tech Stack</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {project.techStack?.map(t => (
-                <span key={t} style={{
-                  padding: "5px 14px",
-                  fontFamily: "var(--font-mono)", fontSize: "11px",
-                  background: "rgba(232,224,200,0.06)",
-                  border: "1px solid rgba(232,224,200,0.12)",
-                  color: "var(--white)", borderRadius: "var(--radius)",
-                }}>{t}</span>
-              ))}
+              {project.techStack?.length > 0
+                ? project.techStack.map(t => (
+                    <span key={t} style={{
+                      padding: "5px 14px",
+                      fontFamily: "var(--font-mono)", fontSize: "11px",
+                      background: "rgba(232,224,200,0.06)",
+                      border: "1px solid rgba(232,224,200,0.12)",
+                      color: "var(--white)", borderRadius: "var(--radius)",
+                    }}>{t}</span>
+                  ))
+                : <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "var(--gray-3)" }}>—</span>
+              }
             </div>
           </div>
           <div style={{ display: "flex", gap: "12px" }}>
@@ -97,8 +107,10 @@ const ProjectModal = ({ project, onClose }) => {
   );
 };
 
-const ProjectCard = ({ project, onClick, delay }) => {
+const ProjectCard = ({ project, onClick }) => {
   const [hovered, setHovered] = useState(false);
+  const [imgSrc, setImgSrc] = useState(project.image);
+
   return (
     <div
       onClick={() => onClick(project)}
@@ -118,8 +130,9 @@ const ProjectCard = ({ project, onClick, delay }) => {
     >
       <div style={{ position: "relative", overflow: "hidden", height: "220px" }}>
         <img
-          src={project.image}
+          src={imgSrc}
           alt={project.title}
+          onError={() => setImgSrc(FALLBACK_IMAGE)}
           style={{
             width: "100%", height: "100%", objectFit: "cover",
             transition: "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)",
@@ -157,6 +170,7 @@ const ProjectCard = ({ project, onClick, delay }) => {
         )}
       </div>
       <div style={{ padding: "20px 22px" }}>
+        {/* Tags */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "12px" }}>
           {project.tags?.slice(0, 3).map(t => <span key={t} className="tag" style={{ fontSize: "9px" }}>{t}</span>)}
         </div>
@@ -168,7 +182,24 @@ const ProjectCard = ({ project, onClick, delay }) => {
           fontSize: "0.825rem", color: "var(--gray-4)", lineHeight: 1.6,
           display: "-webkit-box", WebkitLineClamp: 2,
           WebkitBoxOrient: "vertical", overflow: "hidden",
+          marginBottom: "14px",
         }}>{project.description}</p>
+
+        {/* Tech Stack badges on card */}
+        {project.techStack?.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+            {project.techStack.slice(0, 4).map(t => (
+              <span key={t} style={{
+                padding: "3px 10px",
+                fontFamily: "var(--font-mono)", fontSize: "9px",
+                letterSpacing: "0.5px",
+                background: "rgba(232,224,200,0.06)",
+                border: "1px solid rgba(232,224,200,0.12)",
+                color: "var(--gray-4)", borderRadius: "var(--radius)",
+              }}>{t}</span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -182,27 +213,35 @@ const Projects = ({ data }) => {
   const { ref, isVisible } = useScrollReveal({ threshold: 0.05 });
 
   const localProjects = data?.projects || [];
-  const categories = ["All", ...new Set(localProjects.map(p => p.category))];
 
   // GitHub API
   useEffect(() => {
     const githubUsername = data?.social?.github?.split("/").pop();
     if (!githubUsername || githubUsername === "github.com" || githubUsername === "") return;
     setLoading(true);
-    fetch(`https://api.github.com/users/${githubUsername}/repos?sort=stars&per_page=3`)
+    fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=6`)
       .then(r => r.json())
       .then(repos => {
         if (Array.isArray(repos)) {
-          const mapped = repos.slice(0, 3).map(repo => ({
+          // filter out forks, pick top 3
+          const filtered = repos.filter(r => !r.fork).slice(0, 3);
+          const mapped = filtered.map(repo => ({
             id: `gh-${repo.id}`,
             title: repo.name.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
             description: repo.description || "No description provided.",
-image: `https://opengraph.githubassets.com/v1/${githubUsername}/${repo.name}`,
-            tags: repo.topics?.slice(0, 3) || ["Open Source"],
+            // use readme image via raw githubusercontent if social preview fails
+            image: `https://opengraph.githubassets.com/v2/${githubUsername}/${repo.name}`,
+            tags: repo.topics?.slice(0, 3).length > 0
+              ? repo.topics.slice(0, 3)
+              : [repo.language || "Open Source"].filter(Boolean),
             category: "GitHub",
             liveUrl: repo.homepage || "#",
             githubUrl: repo.html_url,
-            techStack: [repo.language].filter(Boolean),
+            // language + topics as techStack
+            techStack: [
+              repo.language,
+              ...(repo.topics?.slice(0, 3) || [])
+            ].filter(Boolean),
             isGithub: true,
           }));
           setGithubProjects(mapped);
