@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import Icon from "./Icons";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
@@ -123,12 +124,26 @@ const Contact = ({ data }) => {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
     setSubmitting(true);
-    await new Promise(r => setTimeout(r, 1500));
+    try {
+      await emailjs.send(
+        "service_h6n3s96",
+        "template_hum2wcw",
+        {
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        },
+        "2hEDcYYB58rlTmTZD"
+      );
+      showToast("success", "Message sent! I'll get back to you soon.");
+      setForm({ name: "", email: "", subject: "", message: "" });
+      setTouched({});
+      setErrors({});
+    } catch {
+      showToast("error", "Failed to send. Please try again.");
+    }
     setSubmitting(false);
-    showToast("success", "Message sent successfully! I'll get back to you soon.");
-    setForm({ name: "", email: "", subject: "", message: "" });
-    setTouched({});
-    setErrors({});
   };
 
   const isValid = (field) => touched[field] && !errors[field] && form[field].trim();
